@@ -160,7 +160,7 @@ const CATEGORIES = [
   { id: 'food', name: 'Food', icon: FaUtensils, gradient: 'from-emerald-400 via-teal-500 to-cyan-500' },
   { id: 'travel', name: 'Travel', icon: FaCar, gradient: 'from-sky-400 via-blue-500 to-indigo-500' },
   { id: 'shopping', name: 'Shopping', icon: FaShoppingBag, gradient: 'from-purple-400 via-violet-500 to-fuchsia-500' },
-  { id: 'entertainment', name: 'Fun', icon: FaGamepad, gradient: 'from-pink-400 via-rose-500 to-red-500' }
+  { id: 'entertainment', name: 'Fun', icon: FaGamepad, gradient: 'from-amber-400 via-orange-500 to-red-500' }
 ]
 
 const MOODS: Array<{ id: Mood; icon: any; label: string; color: string }> = [
@@ -174,8 +174,8 @@ const MOODS: Array<{ id: Mood; icon: any; label: string; color: string }> = [
 const BADGES: Badge[] = [
   { id: '1', name: 'First Steps', icon: FaStar, color: 'from-yellow-400 to-orange-500', unlocked: true, description: 'Logged your first expense', xp: 50 },
   { id: '2', name: 'Week Warrior', icon: FaFire, color: 'from-orange-400 to-red-500', unlocked: false, description: '7 days of tracking', xp: 100 },
-  { id: '3', name: 'Budget Boss', icon: FaGem, color: 'from-purple-400 to-pink-500', unlocked: false, description: 'Stayed within budget for a month', xp: 200 },
-  { id: '4', name: 'Savings Star', icon: FaRocket, color: 'from-blue-400 to-cyan-500', unlocked: false, description: 'Reached your first savings goal', xp: 150 },
+  { id: '3', name: 'Budget Boss', icon: FaGem, color: 'from-emerald-400 to-green-500', unlocked: false, description: 'Stayed within budget for a month', xp: 200 },
+  { id: '4', name: 'Savings Star', icon: FaRocket, color: 'from-emerald-400 via-green-500 to-teal-500', unlocked: false, description: 'Reached your first savings goal', xp: 150 },
   { id: '5', name: 'Mindful Master', icon: FaHeart, color: 'from-pink-400 to-rose-500', unlocked: false, description: 'Used mood check-in 10 times', xp: 120 },
   { id: '6', name: 'Streak Legend', icon: FaFire, color: 'from-red-400 to-orange-500', unlocked: false, description: '30 day streak', xp: 300 }
 ]
@@ -504,7 +504,8 @@ export default function Home() {
     const gradientColorMap: { [key: string]: { start: string; end: string } } = {
       'from-emerald-400 to-teal-500': { start: '#34d399', end: '#14b8a6' },
       'from-purple-400 to-pink-500': { start: '#c084fc', end: '#ec4899' },
-      'from-emerald-400 via-teal-500 to-cyan-500': { start: '#34d399', end: '#06b6d4' }
+      'from-emerald-400 via-teal-500 to-cyan-500': { start: '#34d399', end: '#06b6d4' },
+      'from-emerald-400 via-green-500 to-teal-500': { start: '#34d399', end: '#14b8a6' }
     }
 
     const colors = gradientColorMap[gradient] || { start: '#34d399', end: '#14b8a6' }
@@ -911,18 +912,18 @@ export default function Home() {
   const DashboardScreen = () => (
     <div className="space-y-6 pb-28">
       {/* Level & XP Card */}
-      <Card className="bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 border-none shadow-xl rounded-3xl overflow-hidden">
+      <Card className="bg-gradient-to-br from-emerald-100 via-green-100 to-teal-100 border-none shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+              <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
                 <span className="text-2xl font-bold text-white">L{level}</span>
               </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-600 font-semibold">Level {level}</p>
                 <div className="mt-2 h-3 w-48 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                   <div
-                    className="h-full bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 transition-all duration-700 ease-out rounded-full"
+                    className="h-full bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 transition-all duration-700 ease-out rounded-full"
                     style={{ width: `${xpProgressInLevel(xp)}%` }}
                   />
                 </div>
@@ -932,7 +933,7 @@ export default function Home() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <p className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent">
                 {xp}
               </p>
               <p className="text-xs text-gray-600 font-semibold">total XP</p>
@@ -981,7 +982,7 @@ export default function Home() {
       </Card>
 
       {/* Spending Health Ring */}
-      <Card className="shadow-xl rounded-3xl border-none bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-emerald-50 to-teal-50">
         <CardHeader>
           <CardTitle className="text-gray-800 text-xl">spending vibe check</CardTitle>
           <CardDescription className="text-gray-600">how you're doing this month</CardDescription>
@@ -992,7 +993,7 @@ export default function Home() {
               percentage={getOverallHealth()}
               size={180}
               strokeWidth={14}
-              gradient="from-emerald-400 to-teal-500"
+              gradient="from-emerald-400 via-green-500 to-teal-500"
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
@@ -1704,7 +1705,7 @@ export default function Home() {
   const GoalsScreen = () => (
     <div className="space-y-6 pb-28">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
           goals & savings
         </h2>
         <p className="text-gray-600 text-sm mt-1">dream big, start small</p>
@@ -1715,7 +1716,7 @@ export default function Home() {
         {goals.map(goal => {
           const percentage = (goal.current / goal.target) * 100
           return (
-            <Card key={goal.id} className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-purple-50 to-pink-50">
+            <Card key={goal.id} className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex-1">
@@ -1731,7 +1732,7 @@ export default function Home() {
                     percentage={percentage}
                     size={90}
                     strokeWidth={9}
-                    gradient="from-purple-400 to-pink-500"
+                    gradient="from-emerald-400 via-green-500 to-teal-500"
                   />
                 </div>
                 <div className="space-y-3">
@@ -1743,7 +1744,7 @@ export default function Home() {
                   </div>
                   <div className="h-4 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                     <div
-                      className="h-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-700 ease-out rounded-full"
+                      className="h-full bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 transition-all duration-700 ease-out rounded-full"
                       style={{ width: `${Math.min(percentage, 100)}%` }}
                     />
                   </div>
