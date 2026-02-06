@@ -32,6 +32,7 @@ import {
   FaGrin
 } from 'react-icons/fa'
 import { Loader2 } from 'lucide-react'
+import { PieChart, Pie, Cell, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
 import { callAIAgent } from '@/lib/aiAgent'
 
 // TypeScript interfaces based on actual agent responses
