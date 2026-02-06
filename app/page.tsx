@@ -1415,200 +1415,290 @@ export default function Home() {
     </div>
   )
 
-  const InsightsScreen = () => (
-    <div className="space-y-6 pb-28">
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-          your insights
-        </h2>
-        <p className="text-gray-600 text-sm mt-1">patterns & progress</p>
-      </div>
+  const InsightsScreen = () => {
+    // Prepare chart data from current spending
+    const categoryChartData = budgets.map(b => {
+      const category = CATEGORIES.find(c => c.id === b.category)
+      return {
+        name: category?.name || b.category,
+        spent: b.spent,
+        limit: b.limit,
+        percentage: Math.round((b.spent / b.limit) * 100)
+      }
+    })
 
-      {!insightsData ? (
-        <>
-          {/* Monthly Overview Card */}
-          <Card className="bg-gradient-to-br from-purple-100 via-pink-100 to-rose-100 border-none shadow-xl rounded-3xl">
-            <CardContent className="pt-6">
-              <div className="flex items-start space-x-4">
-                <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-full p-3 shadow-lg flex-shrink-0">
-                  <FaChartLine className="text-white text-2xl" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800 mb-3">
-                    discover your patterns
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed mb-6">
-                    understanding your unique spending habits helps you build lasting change. let's see what's going on
-                  </p>
-                  <Button
-                    onClick={handleViewInsights}
-                    disabled={insightsLoading}
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                  >
-                    {insightsLoading ? (
-                      <>
-                        <Loader2 className="animate-spin mr-2" />
-                        analyzing...
-                      </>
-                    ) : (
-                      'view insights'
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+    // Mock time-based spending data (in real app, would come from expense history)
+    const weeklySpendingData = [
+      { day: 'Mon', amount: 1200 },
+      { day: 'Tue', amount: 800 },
+      { day: 'Wed', amount: 1500 },
+      { day: 'Thu', amount: 2100 },
+      { day: 'Fri', amount: 1800 },
+      { day: 'Sat', amount: 2400 },
+      { day: 'Sun', amount: 1100 }
+    ]
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 gap-4">
-            <Card className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-emerald-100 to-teal-100">
-              <CardContent className="pt-6 text-center">
-                <p className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  {expenses.length}
-                </p>
-                <p className="text-sm text-gray-600 mt-2 font-semibold">transactions</p>
+    // Mood distribution data
+    const moodData = [
+      { mood: 'Happy', count: 12, color: '#fbbf24' },
+      { mood: 'Neutral', count: 8, color: '#9ca3af' },
+      { mood: 'Stressed', count: 5, color: '#f97316' },
+      { mood: 'Anxious', count: 3, color: '#ef4444' }
+    ]
+
+    return (
+      <div className="space-y-6 pb-28">
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            visual insights
+          </h2>
+        </div>
+
+        {!insightsData ? (
+          <>
+            {/* Spending by Category - Pie Chart */}
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-none shadow-xl rounded-3xl overflow-hidden">
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">spending breakdown</h3>
+                <div className="w-full h-64 flex items-center justify-center">
+                  <PieChart width={300} height={240}>
+                    <Pie
+                      data={categoryChartData}
+                      cx={150}
+                      cy={120}
+                      innerRadius={60}
+                      outerRadius={90}
+                      paddingAngle={5}
+                      dataKey="spent"
+                    >
+                      {categoryChartData.map((entry, index) => {
+                        const colors = ['#8b5cf6', '#ec4899', '#f59e0b', '#3b82f6']
+                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                      })}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '12px',
+                        border: 'none',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                      }}
+                    />
+                  </PieChart>
+                </div>
+                <div className="grid grid-cols-2 gap-3 mt-4">
+                  {categoryChartData.map((cat, idx) => {
+                    const colors = ['from-purple-500 to-violet-600', 'from-pink-500 to-rose-600', 'from-amber-500 to-orange-600', 'from-blue-500 to-indigo-600']
+                    return (
+                      <div key={idx} className="flex items-center space-x-2">
+                        <div className={`w-3 h-3 rounded-full bg-gradient-to-br ${colors[idx]}`} />
+                        <span className="text-xs font-semibold text-gray-700">{cat.name}</span>
+                      </div>
+                    )
+                  })}
+                </div>
               </CardContent>
             </Card>
-            <Card className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-purple-100 to-pink-100">
-              <CardContent className="pt-6 text-center">
-                <p className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  {budgets.filter(b => b.spent <= b.limit).length}
-                </p>
-                <p className="text-sm text-gray-600 mt-2 font-semibold">on track</p>
+
+            {/* Weekly Trend - Bar Chart */}
+            <Card className="bg-white/80 backdrop-blur-sm border-none shadow-xl rounded-3xl overflow-hidden">
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">weekly pattern</h3>
+                <div className="w-full h-64">
+                  <BarChart width={350} height={240} data={weeklySpendingData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="day" stroke="#6b7280" style={{ fontSize: '12px' }} />
+                    <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '12px',
+                        border: 'none',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                      }}
+                      formatter={(value) => `₹${value}`}
+                    />
+                    <Bar dataKey="amount" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
+                    <defs>
+                      <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#a855f7" stopOpacity={1} />
+                        <stop offset="100%" stopColor="#ec4899" stopOpacity={1} />
+                      </linearGradient>
+                    </defs>
+                  </BarChart>
+                </div>
               </CardContent>
             </Card>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Narrative Summary */}
-          <Card className="bg-gradient-to-br from-emerald-100 via-teal-100 to-cyan-100 border-none shadow-xl rounded-3xl">
-            <CardContent className="pt-6">
-              <div className="flex items-start space-x-4">
-                <div className="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full p-3 shadow-lg flex-shrink-0">
-                  <FaLeaf className="text-white text-2xl" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">your monthly story</h3>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{insightsData.narrative_summary}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Key Patterns */}
-          <Card className="shadow-xl rounded-3xl border-none bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-gray-800 text-xl">pattern discovery</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {insightsData.key_patterns.map((pattern, idx) => (
-                <div key={idx} className="p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl shadow-md">
-                  <p className="font-bold text-gray-800 capitalize mb-2">
-                    {pattern.pattern_type.replace('_', ' ')}
-                  </p>
-                  <p className="text-sm text-gray-700 mb-3 leading-relaxed">{pattern.description}</p>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    <strong>impact:</strong> {pattern.impact}
-                  </p>
+            {/* Budget Progress Bars */}
+            <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-none shadow-xl rounded-3xl">
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">budget health</h3>
+                <div className="space-y-4">
+                  {categoryChartData.map((cat, idx) => {
+                    const colors = ['from-purple-400 to-violet-500', 'from-pink-400 to-rose-500', 'from-amber-400 to-orange-500', 'from-blue-400 to-indigo-500']
+                    return (
+                      <div key={idx} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-bold text-gray-800">{cat.name}</span>
+                          <span className="text-xs font-bold text-gray-600">{cat.percentage}%</span>
+                        </div>
+                        <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+                          <div
+                            className={`absolute inset-y-0 left-0 bg-gradient-to-r ${colors[idx]} rounded-full transition-all duration-700`}
+                            style={{ width: `${Math.min(cat.percentage, 100)}%` }}
+                          />
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-600">
+                          <span>₹{cat.spent.toLocaleString('en-IN')}</span>
+                          <span>₹{cat.limit.toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
-              ))}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Emotional Insights */}
-          <Card className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-pink-100 to-rose-100">
-            <CardHeader>
-              <CardTitle className="text-gray-800 flex items-center space-x-2 text-xl">
-                <FaHeart className="text-pink-500" />
-                <span>emotional patterns</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-5 bg-white/60 backdrop-blur-sm rounded-2xl shadow-md">
-                <p className="text-sm font-bold text-gray-800 mb-3">common emotions</p>
-                <div className="flex flex-wrap gap-2">
+            {/* Mood Distribution - Horizontal Bar */}
+            <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-none shadow-xl rounded-3xl">
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">spending moods</h3>
+                <div className="space-y-3">
+                  {moodData.map((mood, idx) => {
+                    const total = moodData.reduce((sum, m) => sum + m.count, 0)
+                    const percentage = Math.round((mood.count / total) * 100)
+                    return (
+                      <div key={idx} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-bold text-gray-800">{mood.mood}</span>
+                          <span className="text-xs font-bold text-gray-600">{mood.count} times</span>
+                        </div>
+                        <div className="relative h-8 bg-white/60 rounded-full overflow-hidden shadow-md">
+                          <div
+                            className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 flex items-center justify-end pr-3"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: mood.color
+                            }}
+                          >
+                            <span className="text-xs font-bold text-white">{percentage}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Button
+              onClick={handleViewInsights}
+              disabled={insightsLoading}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl h-14 font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+            >
+              {insightsLoading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" />
+                  analyzing...
+                </>
+              ) : (
+                'get ai insights'
+              )}
+            </Button>
+          </>
+        ) : (
+          <>
+            {/* AI Insights with minimal text */}
+            <Card className="bg-gradient-to-br from-emerald-100 via-teal-100 to-cyan-100 border-none shadow-xl rounded-3xl">
+              <CardContent className="pt-6">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full p-3 shadow-lg flex-shrink-0">
+                    <FaLeaf className="text-white text-2xl" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-800 mb-3">key insight</h3>
+                    <p className="text-gray-700 leading-relaxed">{insightsData.narrative_summary}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Pattern Cards - Minimal */}
+            <div className="grid grid-cols-2 gap-4">
+              {insightsData.key_patterns.slice(0, 4).map((pattern, idx) => {
+                const gradients = [
+                  'from-purple-400 to-violet-500',
+                  'from-pink-400 to-rose-500',
+                  'from-amber-400 to-orange-500',
+                  'from-blue-400 to-indigo-500'
+                ]
+                return (
+                  <Card key={idx} className={`bg-gradient-to-br ${gradients[idx]} border-none shadow-xl rounded-3xl`}>
+                    <CardContent className="pt-6 text-center">
+                      <p className="text-3xl font-bold text-white mb-2">{pattern.frequency}</p>
+                      <p className="text-sm font-semibold text-white/90 capitalize">
+                        {pattern.pattern_type.replace('_', ' ')}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+
+            {/* Emotional Insights - Visual Only */}
+            <Card className="bg-gradient-to-br from-pink-100 to-rose-100 border-none shadow-xl rounded-3xl">
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">emotional spending</h3>
+                <div className="flex flex-wrap justify-center gap-3">
                   {insightsData.emotional_insights.most_common_spending_emotions.map((emotion, idx) => (
-                    <span key={idx} className="px-4 py-2 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full text-sm font-bold text-gray-700 shadow-md">
-                      {emotion}
-                    </span>
+                    <div key={idx} className="px-6 py-3 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full shadow-lg">
+                      <span className="text-sm font-bold text-white">{emotion}</span>
+                    </div>
                   ))}
                 </div>
-              </div>
-              <p className="text-sm text-gray-700 leading-relaxed px-2">
-                {insightsData.emotional_insights.emotion_spending_correlation}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Growth Strategies */}
-          <Card className="shadow-xl rounded-3xl border-none bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-gray-800 text-xl">growth strategies</CardTitle>
-              <CardDescription className="text-gray-600">science-backed techniques</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {insightsData.growth_strategies.map((strategy, idx) => (
-                <div key={idx} className={`p-5 rounded-2xl shadow-md ${
-                  strategy.priority === 'high'
-                    ? 'bg-gradient-to-br from-emerald-100 to-teal-100 border-2 border-emerald-300'
-                    : 'bg-gray-50'
-                }`}>
-                  <div className="flex items-start justify-between mb-3">
-                    <p className="font-bold text-gray-800 flex-1">{strategy.strategy}</p>
-                    <span className={`text-xs px-3 py-1 rounded-full font-bold ${
-                      strategy.priority === 'high'
-                        ? 'bg-emerald-200 text-emerald-800'
-                        : 'bg-gray-200 text-gray-700'
-                    }`}>
-                      {strategy.priority}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-700 mb-2 leading-relaxed">
-                    <strong>why it works:</strong> {strategy.why_it_works}
-                  </p>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    <strong>how to start:</strong> {strategy.how_to_implement}
-                  </p>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Progress Highlights */}
-          {insightsData.progress_highlights.length > 0 && (
-            <Card className="bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 border-none shadow-xl rounded-3xl">
-              <CardHeader>
-                <CardTitle className="text-gray-800 flex items-center space-x-2 text-xl">
-                  <FaTrophy className="text-yellow-600" />
-                  <span>celebrate your wins</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {insightsData.progress_highlights.map((highlight, idx) => (
-                  <div key={idx} className="p-5 bg-white/70 backdrop-blur-sm rounded-2xl shadow-md">
-                    <p className="font-bold text-gray-800 mb-2">{highlight.achievement}</p>
-                    <p className="text-sm text-gray-700 mb-3 leading-relaxed">{highlight.impact}</p>
-                    <p className="text-sm bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent italic font-semibold">
-                      {highlight.encouragement}
+                <div className="mt-6 text-center">
+                  <div className="inline-block bg-white/60 backdrop-blur-sm rounded-full px-6 py-3 shadow-md">
+                    <p className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                      {insightsData.emotional_insights.stress_spending_score}%
                     </p>
+                    <p className="text-xs font-semibold text-gray-700 mt-1">stress factor</p>
                   </div>
-                ))}
+                </div>
               </CardContent>
             </Card>
-          )}
 
-          <Button
-            onClick={() => setInsightsData(null)}
-            className="w-full h-12 bg-white text-gray-700 border-2 border-gray-300 hover:border-purple-400 hover:bg-purple-50 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center space-x-2"
-          >
-            <FaArrowLeft />
-            <span>back</span>
-          </Button>
-        </>
-      )}
-    </div>
-  )
+            {/* Top Strategy - Hero Card */}
+            {insightsData.growth_strategies.length > 0 && (
+              <Card className="bg-gradient-to-br from-emerald-100 to-teal-100 border-2 border-emerald-300 shadow-xl rounded-3xl">
+                <CardContent className="pt-6">
+                  <div className="text-center space-y-3">
+                    <div className="inline-block bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full p-4 shadow-lg">
+                      <FaRocket className="text-white text-3xl" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">
+                      {insightsData.growth_strategies[0].strategy}
+                    </h3>
+                    <p className="text-sm text-gray-700 px-4">
+                      {insightsData.growth_strategies[0].how_to_implement}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <Button
+              onClick={() => setInsightsData(null)}
+              className="w-full h-12 bg-white text-gray-700 border-2 border-gray-300 hover:border-purple-400 hover:bg-purple-50 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center space-x-2"
+            >
+              <FaArrowLeft />
+              <span>back</span>
+            </Button>
+          </>
+        )}
+      </div>
+    )
+  }
 
   const GoalsScreen = () => (
     <div className="space-y-6 pb-28">
