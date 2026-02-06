@@ -29,7 +29,9 @@ import {
   FaMeh,
   FaFrown,
   FaSadTear,
-  FaGrin
+  FaGrin,
+  FaEye,
+  FaEyeSlash
 } from 'react-icons/fa'
 import { Loader2 } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
@@ -229,6 +231,10 @@ export default function Home() {
   const [companionMood, setCompanionMood] = useState<'calm' | 'thinking' | 'alert' | 'playful' | 'approving' | 'worried' | 'celebrating'>('calm')
   const [impulseLevel, setImpulseLevel] = useState(0)
   const [showCelebrationCompanion, setShowCelebrationCompanion] = useState(false)
+
+  // Account balance state
+  const [accountBalance, setAccountBalance] = useState(50000) // Default balance
+  const [isBalanceHidden, setIsBalanceHidden] = useState(false)
 
   // Helper functions for gamification
   const calculateLevel = (xp: number) => Math.floor(xp / 100) + 1
@@ -911,6 +917,30 @@ export default function Home() {
   // Screen Components
   const DashboardScreen = () => (
     <div className="space-y-6 pb-28">
+      {/* Account Balance Card */}
+      <Card className="bg-gradient-to-br from-emerald-100 via-green-100 to-teal-100 border-none shadow-xl rounded-3xl overflow-hidden">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <p className="text-sm text-gray-600 font-semibold mb-2">current balance</p>
+              <p className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent">
+                {isBalanceHidden ? '₹ • • • • •' : `₹${accountBalance.toLocaleString('en-IN')}`}
+              </p>
+            </div>
+            <button
+              onClick={() => setIsBalanceHidden(!isBalanceHidden)}
+              className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95"
+            >
+              {isBalanceHidden ? (
+                <FaEyeSlash className="text-white text-xl" />
+              ) : (
+                <FaEye className="text-white text-xl" />
+              )}
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Level & XP Card */}
       <Card className="bg-gradient-to-br from-emerald-100 via-green-100 to-teal-100 border-none shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="pt-6">
