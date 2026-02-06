@@ -137,6 +137,14 @@ interface Badge {
   color: string
   unlocked: boolean
   description: string
+  xp: number
+}
+
+interface Notification {
+  id: string
+  message: string
+  type: 'achievement' | 'tip' | 'challenge' | 'levelup'
+  timestamp: Date
 }
 
 type Screen = 'dashboard' | 'track' | 'insights' | 'goals' | 'settings'
@@ -163,10 +171,12 @@ const MOODS: Array<{ id: Mood; icon: any; label: string; color: string }> = [
 ]
 
 const BADGES: Badge[] = [
-  { id: '1', name: 'First Steps', icon: FaStar, color: 'from-yellow-400 to-orange-500', unlocked: true, description: 'Logged your first expense' },
-  { id: '2', name: 'Week Warrior', icon: FaFire, color: 'from-orange-400 to-red-500', unlocked: false, description: '7 days of tracking' },
-  { id: '3', name: 'Budget Boss', icon: FaGem, color: 'from-purple-400 to-pink-500', unlocked: false, description: 'Stayed within budget for a month' },
-  { id: '4', name: 'Savings Star', icon: FaRocket, color: 'from-blue-400 to-cyan-500', unlocked: false, description: 'Reached your first savings goal' }
+  { id: '1', name: 'First Steps', icon: FaStar, color: 'from-yellow-400 to-orange-500', unlocked: true, description: 'Logged your first expense', xp: 50 },
+  { id: '2', name: 'Week Warrior', icon: FaFire, color: 'from-orange-400 to-red-500', unlocked: false, description: '7 days of tracking', xp: 100 },
+  { id: '3', name: 'Budget Boss', icon: FaGem, color: 'from-purple-400 to-pink-500', unlocked: false, description: 'Stayed within budget for a month', xp: 200 },
+  { id: '4', name: 'Savings Star', icon: FaRocket, color: 'from-blue-400 to-cyan-500', unlocked: false, description: 'Reached your first savings goal', xp: 150 },
+  { id: '5', name: 'Mindful Master', icon: FaHeart, color: 'from-pink-400 to-rose-500', unlocked: false, description: 'Used mood check-in 10 times', xp: 120 },
+  { id: '6', name: 'Streak Legend', icon: FaFire, color: 'from-red-400 to-orange-500', unlocked: false, description: '30 day streak', xp: 300 }
 ]
 
 export default function Home() {
@@ -189,6 +199,11 @@ export default function Home() {
   const [streak, setStreak] = useState(5)
   const [badges, setBadges] = useState<Badge[]>(BADGES)
   const [showCelebration, setShowCelebration] = useState(false)
+  const [level, setLevel] = useState(1)
+  const [xp, setXp] = useState(0)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [moodCheckInCount, setMoodCheckInCount] = useState(0)
+  const [lastLoginDate, setLastLoginDate] = useState(new Date().toDateString())
 
   // Track screen state
   const [amount, setAmount] = useState('')
@@ -213,6 +228,137 @@ export default function Home() {
   const [companionMood, setCompanionMood] = useState<'calm' | 'thinking' | 'alert' | 'playful' | 'approving' | 'worried' | 'celebrating'>('calm')
   const [impulseLevel, setImpulseLevel] = useState(0)
   const [showCelebrationCompanion, setShowCelebrationCompanion] = useState(false)
+
+  // Helper functions for gamification
+  const calculateLevel = (xp: number) => Math.floor(xp / 100) + 1
+  const xpForNextLevel = (level: number) => level * 100
+  const xpProgressInLevel = (xp: number) => xp % 100
+
+  const addXP = (amount: number, reason: string) => {
+    const newXP = xp + amount
+    const newLevel = calculateLevel(newXP)
+    const oldLevel = level
+
+    setXp(newXP)
+
+    // Check for level up
+    if (newLevel > oldLevel) {
+      setLevel(newLevel)
+      addNotification({
+        id: Date.now().toString(),
+        message: `Level Up! You're now level ${newLevel}!`,
+        type: 'levelup',
+        timestamp: new Date()
+      })
+      setShowCelebration(true)
+      setTimeout(() => setShowCelebration(false), 3000)
+    } else {
+      // Regular XP gain notification
+      addNotification({
+        id: Date.now().toString(),
+        message: `+${amount} XP - ${reason}`,
+        type: 'achievement',
+        timestamp: new Date()
+      })
+    }
+  }
+
+  const addNotification = (notification: Notification) => {
+    setNotifications(prev => [notification, ...prev].slice(0, 10)) // Keep only last 10
+  }
+
+  const checkAndUnlockBadges = () => {
+    const updatedBadges = badges.map(badge => {
+      if (badge.unlocked) return badge
+
+      let shouldUnlock = false
+
+      // Check conditions for each badge
+      if (badge.id === '1' && expenses.length >= 1) shouldUnlock = true
+      if (badge.id === '2' && streak >= 7) shouldUnlock = true
+      if (badge.id === '3') {
+        // Budget Boss - stayed within budget for all categories
+        const allWithinBudget = budgets.every(b => b.spent <= b.limit)
+        if (allWithinBudget && expenses.length > 0) shouldUnlock = true
+      }
+      if (badge.id === '4') {
+        // Savings Star - reached a goal
+        const hasReachedGoal = goals.some(g => g.current >= g.target)
+        if (hasReachedGoal) shouldUnlock = true
+      }
+      if (badge.id === '5' && moodCheckInCount >= 10) shouldUnlock = true
+      if (badge.id === '6' && streak >= 30) shouldUnlock = true
+
+      if (shouldUnlock && !badge.unlocked) {
+        addXP(badge.xp, `Unlocked: ${badge.name}`)
+        addNotification({
+          id: Date.now().toString() + badge.id,
+          message: `🏆 Badge Unlocked: ${badge.name}!`,
+          type: 'achievement',
+          timestamp: new Date()
+        })
+        return { ...badge, unlocked: true }
+      }
+
+      return badge
+    })
+
+    setBadges(updatedBadges)
+  }
+
+  const generateAutoChallenge = () => {
+    // Auto-generate challenges based on spending patterns
+    const categorySpending = budgets.map(b => ({
+      category: b.category,
+      percentage: (b.spent / b.limit) * 100
+    }))
+
+    const highestSpendingCategory = categorySpending.reduce((max, current) =>
+      current.percentage > max.percentage ? current : max
+    )
+
+    if (highestSpendingCategory.percentage > 70) {
+      const newChallenge: Challenge = {
+        id: Date.now().toString(),
+        title: `${CATEGORIES.find(c => c.id === highestSpendingCategory.category)?.name} Cool-Down`,
+        description: `Skip ${highestSpendingCategory.category} purchases for 3 days`,
+        progress: 0,
+        total: 3
+      }
+
+      // Only add if not already exists
+      const exists = challenges.some(c => c.title === newChallenge.title)
+      if (!exists) {
+        setChallenges(prev => [...prev, newChallenge])
+        addNotification({
+          id: Date.now().toString(),
+          message: `New challenge created: ${newChallenge.title}`,
+          type: 'challenge',
+          timestamp: new Date()
+        })
+      }
+    }
+  }
+
+  const generateSmartTip = () => {
+    const tips = [
+      'Try the 24-hour rule: Wait a day before impulse purchases',
+      'Small wins add up! Every tracked expense builds awareness',
+      'Feeling stressed? Take 3 deep breaths before shopping',
+      'Ask yourself: Do I need this or just want it right now?',
+      'Celebrate your progress! You\'re building mindful habits',
+      'Budget check: Review your spending before the weekend',
+      'Pro tip: Use cash for discretionary spending to stay mindful'
+    ]
+
+    const randomTip = tips[Math.floor(Math.random() * tips.length)]
+    addNotification({
+      id: Date.now().toString(),
+      message: randomTip,
+      type: 'tip',
+      timestamp: new Date()
+    })
+  }
 
   const handleLogExpense = async () => {
     if (!amount || parseFloat(amount) <= 0) return
@@ -239,8 +385,28 @@ export default function Home() {
     setBudgets(updatedBudgets)
     setExpenses([newExpense, ...expenses])
 
+    // Auto-award XP
+    let earnedXP = 10 // Base XP for logging expense
+    if (includeMoodCheck && selectedMood) {
+      earnedXP += 20 // Bonus for mood check-in
+      setMoodCheckInCount(prev => prev + 1)
+    }
+
     // Build message for wellness manager
     const budget = updatedBudgets.find(b => b.category === category.id)
+
+    // Bonus XP for staying within budget
+    if (budget && budget.spent <= budget.limit) {
+      earnedXP += 15
+    }
+
+    addXP(earnedXP, 'Expense logged')
+
+    // Auto-check badges
+    setTimeout(() => checkAndUnlockBadges(), 500)
+
+    // Auto-generate challenges if needed
+    setTimeout(() => generateAutoChallenge(), 1000)
     let message = `I just spent ₹${expenseAmount} on ${category.name}`
     if (budget) {
       message += ` and my budget limit is ₹${budget.limit} for the month.`
@@ -661,6 +827,61 @@ export default function Home() {
     )
   }
 
+  const NotificationToast = () => {
+    if (notifications.length === 0) return null
+    const latestNotification = notifications[0]
+
+    // Auto-dismiss notification after 5 seconds
+    useEffect(() => {
+      if (notifications.length > 0) {
+        const timer = setTimeout(() => {
+          setNotifications(prev => prev.slice(1))
+        }, 5000)
+        return () => clearTimeout(timer)
+      }
+    }, [notifications.length])
+
+    const getNotificationColor = (type: Notification['type']) => {
+      switch (type) {
+        case 'achievement': return 'from-emerald-100 to-teal-100 border-emerald-300'
+        case 'levelup': return 'from-yellow-100 to-orange-100 border-yellow-300'
+        case 'challenge': return 'from-purple-100 to-pink-100 border-purple-300'
+        case 'tip': return 'from-blue-100 to-cyan-100 border-blue-300'
+      }
+    }
+
+    const getNotificationIcon = (type: Notification['type']) => {
+      switch (type) {
+        case 'achievement': return <FaTrophy className="text-emerald-600" />
+        case 'levelup': return <FaRocket className="text-yellow-600" />
+        case 'challenge': return <FaBullseye className="text-purple-600" />
+        case 'tip': return <FaHeart className="text-blue-600" />
+      }
+    }
+
+    return (
+      <div className="fixed top-20 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none">
+        <div className={`bg-gradient-to-br ${getNotificationColor(latestNotification.type)} border-2 rounded-2xl p-4 shadow-2xl max-w-md w-full pointer-events-auto animate-bounce-in`}>
+          <div className="flex items-center space-x-3">
+            <div className="text-2xl">{getNotificationIcon(latestNotification.type)}</div>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-gray-800">{latestNotification.message}</p>
+              <p className="text-xs text-gray-600 mt-1">
+                {new Date(latestNotification.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+              </p>
+            </div>
+            <button
+              onClick={() => setNotifications(prev => prev.slice(1))}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const Celebration = () => {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
@@ -688,6 +909,37 @@ export default function Home() {
   // Screen Components
   const DashboardScreen = () => (
     <div className="space-y-6 pb-28">
+      {/* Level & XP Card */}
+      <Card className="bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-100 border-none shadow-xl rounded-3xl overflow-hidden">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold text-white">L{level}</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 font-semibold">Level {level}</p>
+                <div className="mt-2 h-3 w-48 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                  <div
+                    className="h-full bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 transition-all duration-700 ease-out rounded-full"
+                    style={{ width: `${xpProgressInLevel(xp)}%` }}
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1 font-medium">
+                  {xpProgressInLevel(xp)}/{xpForNextLevel(level)} XP to level {level + 1}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                {xp}
+              </p>
+              <p className="text-xs text-gray-600 font-semibold">total XP</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Daily Encouragement with Streak */}
       <Card className="bg-gradient-to-br from-purple-100 via-pink-100 to-rose-100 border-none shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="pt-6">
@@ -827,6 +1079,55 @@ export default function Home() {
       </Card>
     </div>
   )
+
+  // Auto-check streak on app load
+  useEffect(() => {
+    const today = new Date().toDateString()
+    if (lastLoginDate !== today) {
+      const yesterday = new Date(Date.now() - 86400000).toDateString()
+      if (lastLoginDate === yesterday) {
+        // Continue streak
+        setStreak(prev => prev + 1)
+        addXP(5, 'Daily streak continued')
+        addNotification({
+          id: Date.now().toString(),
+          message: `🔥 ${streak + 1} day streak! Keep it up!`,
+          type: 'achievement',
+          timestamp: new Date()
+        })
+      } else {
+        // Streak broken
+        if (streak > 0) {
+          addNotification({
+            id: Date.now().toString(),
+            message: `Streak reset. Start fresh today!`,
+            type: 'tip',
+            timestamp: new Date()
+          })
+        }
+        setStreak(1)
+      }
+      setLastLoginDate(today)
+    }
+
+    // Auto-check badges on load
+    checkAndUnlockBadges()
+
+    // Show a welcome tip after 10 seconds
+    const welcomeTipTimer = setTimeout(() => {
+      generateSmartTip()
+    }, 10000)
+
+    // Periodic tips every 30 minutes
+    const periodicTipTimer = setInterval(() => {
+      generateSmartTip()
+    }, 1800000) // 30 minutes
+
+    return () => {
+      clearTimeout(welcomeTipTimer)
+      clearInterval(periodicTipTimer)
+    }
+  }, [])
 
   // Update companion state in real-time based on user input
   useEffect(() => {
@@ -1721,6 +2022,9 @@ export default function Home() {
 
       {/* Bottom Navigation */}
       {currentScreen !== 'settings' && <BottomNav />}
+
+      {/* Notification Toast */}
+      <NotificationToast />
 
       {/* Celebration Overlay */}
       {showCelebration && <Celebration />}
