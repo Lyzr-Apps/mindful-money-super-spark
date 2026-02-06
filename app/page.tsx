@@ -2121,14 +2121,14 @@ export default function Home() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 bg-clip-text text-transparent">
               ImpulSave
             </h1>
             <p className="text-sm text-gray-600 font-medium mt-1">your spending companion</p>
           </div>
           <button
             onClick={() => setCurrentScreen('settings')}
-            className="p-3 rounded-full hover:bg-gradient-to-br hover:from-purple-100 hover:to-pink-100 transition-all duration-300 hover:scale-110"
+            className="p-3 rounded-full hover:bg-gradient-to-br hover:from-emerald-100 hover:to-green-100 transition-all duration-300 hover:scale-110"
           >
             <FaCog className="text-xl text-gray-600" />
           </button>
