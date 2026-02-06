@@ -318,13 +318,23 @@ export default function Home() {
     const circumference = radius * 2 * Math.PI
     const offset = circumference - (percentage / 100) * circumference
 
+    // Map Tailwind gradient strings to actual color values
+    const gradientColorMap: { [key: string]: { start: string; end: string } } = {
+      'from-emerald-400 to-teal-500': { start: '#34d399', end: '#14b8a6' },
+      'from-purple-400 to-pink-500': { start: '#c084fc', end: '#ec4899' },
+      'from-emerald-400 via-teal-500 to-cyan-500': { start: '#34d399', end: '#06b6d4' }
+    }
+
+    const colors = gradientColorMap[gradient] || { start: '#34d399', end: '#14b8a6' }
+    const gradientId = `gradient-${size}-${Math.random().toString(36).substr(2, 9)}`
+
     return (
       <div className="relative inline-flex items-center justify-center">
         <svg width={size} height={size} className="transform -rotate-90">
           <defs>
-            <linearGradient id={`gradient-${size}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" className={`${gradient.split(' ')[0].replace('from-', 'text-')}`} stopOpacity="1" />
-              <stop offset="100%" className={`${gradient.split(' ')[2].replace('to-', 'text-')}`} stopOpacity="1" />
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{ stopColor: colors.start, stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: colors.end, stopOpacity: 1 }} />
             </linearGradient>
           </defs>
           <circle
@@ -339,7 +349,7 @@ export default function Home() {
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="url(#gradient-ring)"
+            stroke={`url(#${gradientId})`}
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={circumference}
