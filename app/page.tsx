@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -206,6 +206,13 @@ export default function Home() {
   // Settings state
   const [tone, setTone] = useState<'gentle' | 'motivational' | 'direct'>('gentle')
   const [colorTheme, setColorTheme] = useState<'dreamy' | 'vibrant' | 'calm'>('dreamy')
+  const [companionEnabled, setCompanionEnabled] = useState(true)
+  const [companionStyle, setCompanionStyle] = useState<'orb' | 'minimal'>('orb')
+
+  // Companion state
+  const [companionMood, setCompanionMood] = useState<'calm' | 'thinking' | 'alert' | 'playful' | 'approving' | 'worried' | 'celebrating'>('calm')
+  const [impulseLevel, setImpulseLevel] = useState(0)
+  const [showCelebrationCompanion, setShowCelebrationCompanion] = useState(false)
 
   const handleLogExpense = async () => {
     if (!amount || parseFloat(amount) <= 0) return
@@ -246,6 +253,14 @@ export default function Home() {
       const result = await callAIAgent(message, AGENT_IDS.wellnessManager)
       if (result.success && result.response.status === 'success') {
         setManagerResponse(result.response.result as WellnessManagerResponse)
+
+        // Show celebration companion state first
+        if (companionEnabled) {
+          setCompanionMood('celebrating')
+          setTimeout(() => {
+            setCompanionMood('calm')
+          }, 3000)
+        }
 
         // Show breathing animation if intervention needed
         if (result.response.result.intervention_summary?.needed) {
@@ -361,6 +376,233 @@ export default function Home() {
         <div className="absolute text-2xl font-bold bg-gradient-to-br from-purple-600 to-pink-600 bg-clip-text text-transparent">
           {Math.round(percentage)}%
         </div>
+      </div>
+    )
+  }
+
+  // Companion visual states
+  type CompanionMood = 'calm' | 'thinking' | 'alert' | 'playful' | 'approving' | 'worried' | 'celebrating'
+
+  const getCompanionState = (
+    amount: number,
+    category: string,
+    mood: Mood | null,
+    budgetPercentage: number
+  ): CompanionMood => {
+    // High spending alert
+    if (amount > 5000 || budgetPercentage > 80) return 'alert'
+
+    // Category-based states
+    if (category === 'entertainment' || category === 'shopping') {
+      if (amount > 2000) return 'thinking'
+      return 'playful'
+    }
+    if (category === 'food' || category === 'travel') return 'approving'
+
+    // Mood-based states
+    if (mood === 'stressed' || mood === 'anxious') return 'worried'
+    if (mood === 'happy') return 'playful'
+
+    // Default states
+    if (amount > 0 && amount < 1000) return 'calm'
+    if (amount >= 1000 && amount <= 3000) return 'thinking'
+
+    return 'calm'
+  }
+
+  const CompanionVisual = ({
+    state,
+    impulseLevel,
+    onTap,
+    onLongPress
+  }: {
+    state: CompanionMood
+    impulseLevel: number
+    onTap: () => void
+    onLongPress: () => void
+  }) => {
+    const [isPressed, setIsPressed] = useState(false)
+    const [showNudge, setShowNudge] = useState(false)
+    const longPressTimer = useRef<NodeJS.Timeout>()
+
+    const handlePressStart = () => {
+      setIsPressed(true)
+      longPressTimer.current = setTimeout(() => {
+        onLongPress()
+        setShowNudge(true)
+        setTimeout(() => setShowNudge(false), 3000)
+      }, 500)
+    }
+
+    const handlePressEnd = () => {
+      setIsPressed(false)
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current)
+      }
+    }
+
+    const getCompanionColors = () => {
+      switch (state) {
+        case 'calm': return 'from-blue-300 via-cyan-300 to-teal-300'
+        case 'thinking': return 'from-purple-300 via-indigo-300 to-blue-300'
+        case 'alert': return 'from-orange-300 via-amber-300 to-yellow-300'
+        case 'playful': return 'from-pink-300 via-rose-300 to-fuchsia-300'
+        case 'approving': return 'from-emerald-300 via-green-300 to-lime-300'
+        case 'worried': return 'from-purple-300 via-pink-300 to-rose-300'
+        case 'celebrating': return 'from-yellow-300 via-orange-300 to-pink-300'
+        default: return 'from-blue-300 via-cyan-300 to-teal-300'
+      }
+    }
+
+    const getAnimation = () => {
+      switch (state) {
+        case 'calm': return 'animate-pulse'
+        case 'thinking': return 'animate-bounce'
+        case 'alert': return 'animate-ping'
+        case 'playful': return ''
+        case 'worried': return 'animate-pulse'
+        case 'celebrating': return 'animate-bounce'
+        default: return 'animate-pulse'
+      }
+    }
+
+    const getScale = () => {
+      if (isPressed) return 'scale-90'
+      if (state === 'alert') return 'scale-110'
+      if (state === 'celebrating') return 'scale-125'
+      if (state === 'playful') return 'scale-105'
+      return 'scale-100'
+    }
+
+    const getMessage = () => {
+      switch (state) {
+        case 'calm': return 'feeling good vibes'
+        case 'thinking': return 'hmm, let me think...'
+        case 'alert': return 'pause zone - check in?'
+        case 'playful': return 'treat yourself energy!'
+        case 'approving': return 'smart choice'
+        case 'worried': return "i'm here for you"
+        case 'celebrating': return 'yay! logged!'
+        default: return 'here with you'
+      }
+    }
+
+    return (
+      <div className="relative">
+        <button
+          onClick={onTap}
+          onMouseDown={handlePressStart}
+          onMouseUp={handlePressEnd}
+          onMouseLeave={handlePressEnd}
+          onTouchStart={handlePressStart}
+          onTouchEnd={handlePressEnd}
+          className={`relative w-32 h-32 rounded-full bg-gradient-to-br ${getCompanionColors()} transition-all duration-500 ease-out ${getScale()} cursor-pointer hover:shadow-2xl focus:outline-none`}
+        >
+          {/* Outer glow ring */}
+          <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${getCompanionColors()} opacity-40 blur-xl ${getAnimation()}`} />
+
+          {/* Main orb */}
+          <div className="absolute inset-2 rounded-full bg-gradient-to-br from-white/30 to-transparent" />
+
+          {/* Face elements based on state */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {state === 'calm' && (
+              <div className="flex flex-col items-center space-y-2">
+                <div className="flex space-x-3">
+                  <div className="w-2 h-2 rounded-full bg-white/80" />
+                  <div className="w-2 h-2 rounded-full bg-white/80" />
+                </div>
+                <div className="w-8 h-1 rounded-full bg-white/60" />
+              </div>
+            )}
+            {state === 'thinking' && (
+              <div className="flex flex-col items-center space-y-2">
+                <div className="flex space-x-3">
+                  <div className="w-2 h-2 rounded-full bg-white/80" />
+                  <div className="w-2 h-2 rounded-full bg-white/80" />
+                </div>
+                <div className="w-6 h-6 border-2 border-white/60 rounded-full" />
+              </div>
+            )}
+            {state === 'alert' && (
+              <div className="flex flex-col items-center space-y-2">
+                <div className="flex space-x-3">
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/90" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-white/90" />
+                </div>
+                <div className="w-1 h-4 rounded-full bg-white/80" />
+              </div>
+            )}
+            {state === 'playful' && (
+              <div className="flex flex-col items-center space-y-1">
+                <div className="flex space-x-3">
+                  <FaStar className="text-white/80 text-xs" />
+                  <FaStar className="text-white/80 text-xs" />
+                </div>
+                <div className="w-10 h-2 rounded-full bg-white/70 mt-2" />
+              </div>
+            )}
+            {state === 'approving' && (
+              <div className="flex flex-col items-center">
+                <FaCheck className="text-white/90 text-2xl" />
+              </div>
+            )}
+            {state === 'worried' && (
+              <div className="flex flex-col items-center space-y-2">
+                <div className="flex space-x-3">
+                  <div className="w-2 h-3 rounded-full bg-white/80" />
+                  <div className="w-2 h-3 rounded-full bg-white/80" />
+                </div>
+                <FaHeart className="text-white/70 text-sm" />
+              </div>
+            )}
+            {state === 'celebrating' && (
+              <div className="flex flex-col items-center">
+                <FaStar className="text-white/90 text-3xl animate-spin" />
+              </div>
+            )}
+          </div>
+
+          {/* Impulse meter ring */}
+          <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+            <circle
+              cx="50%"
+              cy="50%"
+              r="58"
+              stroke="white"
+              strokeWidth="3"
+              fill="none"
+              opacity="0.2"
+            />
+            <circle
+              cx="50%"
+              cy="50%"
+              r="58"
+              stroke="white"
+              strokeWidth="3"
+              fill="none"
+              strokeDasharray={`${(impulseLevel / 100) * 364} 364`}
+              opacity="0.8"
+              className="transition-all duration-500"
+            />
+          </svg>
+        </button>
+
+        {/* Message bubble */}
+        <div className="mt-3 text-center">
+          <p className="text-xs font-bold text-gray-600 px-3 py-1.5 bg-white/80 rounded-full inline-block shadow-md">
+            {getMessage()}
+          </p>
+        </div>
+
+        {/* Nudge popup */}
+        {showNudge && (
+          <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 bg-white rounded-2xl p-4 shadow-2xl animate-bounce-in z-10 w-48">
+            <p className="text-xs text-gray-700 text-center leading-relaxed">
+              taking a moment to check in is always a good idea
+            </p>
+          </div>
+        )}
       </div>
     )
   }
@@ -586,6 +828,24 @@ export default function Home() {
     </div>
   )
 
+  // Update companion state in real-time based on user input
+  useEffect(() => {
+    if (currentScreen === 'track' && companionEnabled && !managerResponse) {
+      const amountValue = parseFloat(amount) || 0
+      const category = CATEGORIES[selectedCategory]
+      const budget = budgets.find(b => b.category === category.id)
+      const budgetPercentage = budget ? (budget.spent / budget.limit) * 100 : 0
+
+      // Update companion mood
+      const newMood = getCompanionState(amountValue, category.id, selectedMood, budgetPercentage)
+      setCompanionMood(newMood)
+
+      // Update impulse level (0-100 scale based on amount)
+      const newImpulseLevel = Math.min((amountValue / 10000) * 100, 100)
+      setImpulseLevel(newImpulseLevel)
+    }
+  }, [amount, selectedCategory, selectedMood, currentScreen, companionEnabled, managerResponse, budgets])
+
   const TrackScreen = () => (
     <div className="space-y-6 pb-28">
       <div className="mb-6">
@@ -594,6 +854,28 @@ export default function Home() {
         </h2>
         <p className="text-gray-600 text-sm mt-1">no judgment, just tracking</p>
       </div>
+
+      {/* Companion Visual */}
+      {companionEnabled && !managerResponse && companionStyle === 'orb' && (
+        <div className="flex justify-center py-4">
+          <CompanionVisual
+            state={companionMood}
+            impulseLevel={impulseLevel}
+            onTap={() => {
+              // Gentle nudge on tap
+              if (companionMood === 'alert' && parseFloat(amount) > 3000) {
+                setShowBreathingAnimation(true)
+              }
+            }}
+            onLongPress={() => {
+              // Show breathing animation on long press if amount is significant
+              if (parseFloat(amount) > 2000) {
+                setShowBreathingAnimation(true)
+              }
+            }}
+          />
+        </div>
+      )}
 
       {!managerResponse ? (
         <Card className="shadow-xl rounded-3xl border-none bg-white/80 backdrop-blur-sm">
@@ -1291,6 +1573,59 @@ export default function Home() {
               </p>
             </button>
           ))}
+        </CardContent>
+      </Card>
+
+      {/* Companion Settings */}
+      <Card className="shadow-xl rounded-3xl border-none bg-gradient-to-br from-blue-50 to-purple-50">
+        <CardHeader>
+          <CardTitle className="text-gray-800 text-xl">companion visual</CardTitle>
+          <CardDescription className="text-gray-600">your spending buddy</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Enable/Disable Companion */}
+          <div className="flex items-center justify-between p-4 bg-white/60 backdrop-blur-sm rounded-2xl shadow-md">
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-gray-700">enable companion</p>
+              <p className="text-xs text-gray-600 mt-1">interactive visual reactions</p>
+            </div>
+            <button
+              onClick={() => setCompanionEnabled(!companionEnabled)}
+              className={`w-14 h-7 rounded-full relative shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                companionEnabled
+                  ? 'bg-gradient-to-r from-emerald-400 to-teal-500'
+                  : 'bg-gray-300'
+              }`}
+            >
+              <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-all duration-300 ${
+                companionEnabled ? 'right-1' : 'left-1'
+              }`} />
+            </button>
+          </div>
+
+          {/* Visual Style */}
+          {companionEnabled && (
+            <div className="space-y-3 animate-fade-in">
+              <label className="text-sm font-semibold text-gray-700">visual style</label>
+              {(['orb', 'minimal'] as const).map(style => (
+                <button
+                  key={style}
+                  onClick={() => setCompanionStyle(style)}
+                  className={`w-full p-4 rounded-2xl text-left transition-all duration-300 ${
+                    companionStyle === style
+                      ? 'bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400 shadow-lg scale-105'
+                      : 'bg-white/60 border-2 border-transparent hover:bg-white hover:scale-102'
+                  }`}
+                >
+                  <p className="font-bold text-gray-800 capitalize mb-1">{style}</p>
+                  <p className="text-sm text-gray-600">
+                    {style === 'orb' && 'animated orb with expressions & impulse meter'}
+                    {style === 'minimal' && 'simple, subtle visual cues'}
+                  </p>
+                </button>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
