@@ -1,0 +1,110 @@
+{
+  "agent_name": "Behavioral Insights Agent",
+  "agent_id": "69858608e17e33c11eed199a",
+  "test_message": "Analyze spending patterns: Last 30 days - Shopping: $450 (limit $200), Food: $180 (limit $300), Entertainment: $220 (limit $150). 60% of shopping purchases happened on weekday evenings after 7pm. User mentioned stress or tiredness in 8 out of 12 over-budget transactions.",
+  "expected_purpose": "independent",
+  "timestamp": "2026-02-06T06:14:24.092705",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "analysis_period": {
+        "start_date": "2024-05-09",
+        "end_date": "2024-06-08",
+        "total_transactions": 34
+      },
+      "narrative_summary": "This month has been a meaningful step on your mindful money journey, marked by both bright spots and new discoveries. Thank you for your openness in exploring the patterns and emotions behind your spending\u2014each insight brings you closer to the financial calm and control you value. \n\nA few revealing patterns emerged: Shopping and Entertainment categories saw higher-than-intended spending, while Food remained within your set limits, demonstrating your ability to stick to priorities even as life threw its daily challenges. Most notably, moments of stress or fatigue tended to coincide with purchases that pushed beyond your budget, especially in the evenings. Rather than a setback, this is powerful knowledge: knowing when and why impulses arise positions you to create change.\n\nWhat stands out is your honesty about emotional triggers and your consistent tracking\u2014even when things didn\u2019t go as planned. That\u2019s real progress. Let\u2019s celebrate the wins, gently examine new opportunities, and lay out simple, science-backed strategies so next month can feel even more peaceful and empowered.",
+      "key_patterns": [
+        {
+          "pattern_type": "impulse_category",
+          "description": "Shopping and Entertainment spending exceeded monthly budgets by 125% and 47% respectively.",
+          "frequency": "Occurred in 20 of 34 transactions.",
+          "impact": "Financial stress from higher spending in these categories; opportunity to realign habits."
+        },
+        {
+          "pattern_type": "time_based",
+          "description": "60% of Shopping purchases happened on weekday evenings after 7pm.",
+          "frequency": "Consistent weekly pattern.",
+          "impact": "Higher risk of unplanned or emotion-driven spending when energy is lower."
+        },
+        {
+          "pattern_type": "emotional_trigger",
+          "description": "Stress or tiredness was reported in 8 out of 12 over-budget transactions.",
+          "frequency": "66% of over-budget transactions showed a clear emotional link.",
+          "impact": "Reinforces a correlation between emotional state and financial decisions."
+        }
+      ],
+      "impulse_analysis": {
+        "top_impulse_categories": [
+          "Shopping",
+          "Entertainment"
+        ],
+        "common_triggers": [
+          "Evening fatigue",
+          "Work-related stress"
+        ],
+        "impulse_percentage": 59
+      },
+      "emotional_insights": {
+        "most_common_spending_emotions": [
+          "Stressed",
+          "Tired"
+        ],
+        "emotion_spending_correlation": "Impulses to spend often follow stressful or tiring days, particularly in non-essential categories.",
+        "stress_spending_score": 8
+      },
+      "time_based_habits": {
+        "high_risk_times": [
+          "Weekday evenings after 7pm"
+        ],
+        "mindful_spending_times": [
+          "Afternoon on weekends (noted for budget adherence in Food)"
+        ],
+        "patterns_detected": [
+          "Evening fatigue increases impulse purchases, while earlier in the day spending tends to align with planned budgets."
+        ]
+      },
+      "progress_highlights": [
+        {
+          "achievement": "Food spending remained comfortably within budget.",
+          "impact": "Demonstrates your ability to plan, prioritize, and stick to limits when emotional triggers are lower.",
+          "encouragement": "This is a huge win\u2014your mindful planning in one area shows your capability to build systems that support your goals."
+        }
+      ],
+      "growth_strategies": [
+        {
+          "strategy": "Implementation Intentions ('If-then' planning)",
+          "why_it_works": "Research shows that pre-committing to specific responses in tempting situations increases follow-through by making the desired choice automatic.",
+          "how_to_implement": "Before shopping, set a mental rule: 'If I feel stressed and want to buy something in the evening, then I\u2019ll wait 24 hours before purchasing.'",
+          "priority": "high"
+        },
+        {
+          "strategy": "Environmental Design",
+          "why_it_works": "Altering your environment reduces temptation cues and friction for positive behaviors.",
+          "how_to_implement": "Remove shopping apps from your phone after 7pm on weekdays, or keep your wallet in a separate room during high-risk times.",
+          "priority": "high"
+        },
+        {
+          "strategy": "Temptation Bundling",
+          "why_it_works": "Pairing a necessary task with something enjoyable creates positive associations and reduces the urge for mood-related spending.",
+          "how_to_implement": "Reserve your favorite podcast or playlist for while you prep dinner or organize receipts\u2014giving you a boost without spending.",
+          "priority": "medium"
+        },
+        {
+          "strategy": "Progress Tracking",
+          "why_it_works": "Seeing day-by-day improvement builds momentum and reinforces your new identity as a mindful spender.",
+          "how_to_implement": "Mark mindful evenings each week on a tracker. Celebrate every day you stick to your plan, even if it\u2019s just one less impulse buy.",
+          "priority": "medium"
+        }
+      ],
+      "next_month_focus": "Build evening routines that address stress before shopping windows open, using cooling-off periods and environmental cues to support mindful choices."
+    },
+    "metadata": {
+      "agent_name": "Behavioral Insights Agent",
+      "timestamp": "2024-06-08T16:24:00Z",
+      "analysis_type": "monthly"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"analysis_period\": {\n      \"start_date\": \"2024-05-09\",\n      \"end_date\": \"2024-06-08\",\n      \"total_transactions\": 34\n    },\n    \"narrative_summary\": \"This month has been a meaningful step on your mindful money journey, marked by both bright spots and new discoveries. Thank you for your openness in exploring the patterns and emotions behind your spending\u2014each insight brings you closer to the financial calm and control you value. \\n\\nA few revealing patterns emerged: Shopping and Entertainment categories saw higher-than-intended spending, while Food remained within your set limits, demonstrating your ability to stick to priorities even as life threw its daily challenges. Most notably, moments of stress or fatigue tended to coincide with purchases that pushed beyond your budget, especially in the evenings. Rather than a setback, this is powerful knowledge: knowing when and why impulses arise positions you to create change.\\n\\nWhat stands out is your honesty about emotional triggers and your consistent tracking\u2014even when things didn\u2019t go as planned. That\u2019s real progress. Let\u2019s celebrate the wins, gently examine new opportunities, and lay out simple, science-backed strategies so next month can feel even more peaceful and empowered.\",\n    \"key_patterns\": [\n      {\n        \"pattern_type\": \"impulse_category\",\n        \"description\": \"Shopping and Entertainment spending exceeded monthly budgets by 125% and 47% respectively.\",\n        \"frequency\": \"Occurred in 20 of 34 transactions.\",\n        \"impact\": \"Financial stress from higher spending in these categories; opportunity to realign habits.\"\n      },\n      {\n        \"pattern_type\": \"time_based\",\n        \"description\": \"60% of Shopping purchases happened on weekday evenings after 7pm.\",\n        \"frequency\": \"Consistent weekly pattern.\",\n        \"impact\": \"Higher risk of unplanned or emotion-driven spending when energy is lower.\"\n      },\n      {\n        \"pattern_type\": \"emotional_trigger\",\n        \"description\": \"Stress or tiredness was reported in 8 out of 12 over-budget transactions.\",\n        \"frequency\": \"66% of over-budget transactions showed a clear emotional link.\",\n        \"impact\": \"Reinforces a correlation between emotional state and financial decisions.\"\n      }\n    ],\n    \"impulse_analysis\": {\n      \"top_impulse_categories\": [\"Shopping\", \"Entertainment\"],\n      \"common_triggers\": [\"Evening fatigue\", \"Work-related stress\"],\n      \"impulse_percentage\": 59\n    },\n    \"emotional_insights\": {\n      \"most_common_spending_emotions\": [\"Stressed\", \"Tired\"],\n      \"emotion_spending_correlation\": \"Impulses to spend often follow stressful or tiring days, particularly in non-essential categories.\",\n      \"stress_spending_score\": 8\n    },\n    \"time_based_habits\": {\n      \"high_risk_times\": [\"Weekday evenings after 7pm\"],\n      \"mindful_spending_times\": [\"Afternoon on weekends (noted for budget adherence in Food)\"],\n      \"patterns_detected\": [\"Evening fatigue increases impulse purchases, while earlier in the day spending tends to align with planned budgets.\"]\n    },\n    \"progress_highlights\": [\n      {\n        \"achievement\": \"Food spending remained comfortably within budget.\",\n        \"impact\": \"Demonstrates your ability to plan, prioritize, and stick to limits when emotional triggers are lower.\",\n        \"encouragement\": \"This is a huge win\u2014your mindful planning in one area shows your capability to build systems that support your goals.\"\n      }\n    ],\n    \"growth_strategies\": [\n      {\n        \"strategy\": \"Implementation Intentions ('If-then' planning)\",\n        \"why_it_works\": \"Research shows that pre-committing to specific responses in tempting situations increases follow-through by making the desired choice automatic.\",\n        \"how_to_implement\": \"Before shopping, set a mental rule: 'If I feel stressed and want to buy something in the evening, then I\u2019ll wait 24 hours before purchasing.'\",\n        \"priority\": \"high\"\n      },\n      {\n        \"strategy\": \"Environmental Design\",\n        \"why_it_works\": \"Altering your environment reduces temptation cues and friction for positive behaviors.\",\n        \"how_to_implement\": \"Remove shopping apps from your phone after 7pm on weekdays, or keep your wallet in a separate room during high-risk times.\",\n        \"priority\": \"high\"\n      },\n      {\n        \"strategy\": \"Temptation Bundling\",\n        \"why_it_works\": \"Pairing a necessary task with something enjoyable creates positive associations and reduces the urge for mood-related spending.\",\n        \"how_to_implement\": \"Reserve your favorite podcast or playlist for while you prep dinner or organize receipts\u2014giving you a boost without spending.\",\n        \"priority\": \"medium\"\n      },\n      {\n        \"strategy\": \"Progress Tracking\",\n        \"why_it_works\": \"Seeing day-by-day improvement builds momentum and reinforces your new identity as a mindful spender.\",\n        \"how_to_implement\": \"Mark mindful evenings each week on a tracker. Celebrate every day you stick to your plan, even if it\u2019s just one less impulse buy.\",\n        \"priority\": \"medium\"\n      }\n    ],\n    \"next_month_focus\": \"Build evening routines that address stress before shopping windows open, using cooling-off periods and environmental cues to support mindful choices.\"\n  },\n  \"metadata\": {\n    \"agent_name\": \"Behavioral Insights Agent\",\n    \"timestamp\": \"2024-06-08T16:24:00Z\",\n    \"analysis_type\": \"monthly\"\n  }\n}"
+}

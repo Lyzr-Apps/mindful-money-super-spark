@@ -1,0 +1,78 @@
+{
+  "agent_name": "Intervention Agent",
+  "agent_id": "6985858bab4bf65a66ad076d",
+  "agent_purpose": "financial_intervention",
+  "description": "Monitors spending against limits and provides compassionate interventions including notifications, cooling-off timers, and spending lock suggestions",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "intervention_type": "string",
+      "message": "string",
+      "action_recommended": "string",
+      "timer_duration_minutes": "null",
+      "budget_status": {
+        "category": "string",
+        "spent": "number",
+        "limit": "number",
+        "percentage": "number"
+      },
+      "alternative_suggestions": [
+        "string"
+      ]
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "intervention_type": "notification",
+      "message": "Great job keeping track of your spending! You\u2019ve used $150 out of your $200 shopping budget, which puts you at 75%. Let\u2019s celebrate your mindful awareness, and together, we can keep an eye on your remaining budget. If you need ideas for no-cost or low-cost rewards, I\u2019m here to help!",
+      "action_recommended": "Pause and review your shopping list before any new purchases.",
+      "timer_duration_minutes": null,
+      "budget_status": {
+        "category": "shopping",
+        "spent": 150,
+        "limit": 200,
+        "percentage": 75
+      },
+      "alternative_suggestions": [
+        "Take a break and review your upcoming needs before buying more.",
+        "Consider window shopping or online browsing without purchasing to satisfy the urge."
+      ]
+    },
+    "metadata": {
+      "agent_name": "Intervention Agent",
+      "timestamp": "2024-06-13T20:27:18Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T06:13:43.330738",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "intervention_type": "notification",
+      "message": "Great job keeping track of your spending! You\u2019ve used $150 out of your $200 shopping budget, which puts you at 75%. Let\u2019s celebrate your mindful awareness, and together, we can keep an eye on your remaining budget. If you need ideas for no-cost or low-cost rewards, I\u2019m here to help!",
+      "action_recommended": "Pause and review your shopping list before any new purchases.",
+      "timer_duration_minutes": null,
+      "budget_status": {
+        "category": "shopping",
+        "spent": 150,
+        "limit": 200,
+        "percentage": 75
+      },
+      "alternative_suggestions": [
+        "Take a break and review your upcoming needs before buying more.",
+        "Consider window shopping or online browsing without purchasing to satisfy the urge."
+      ]
+    },
+    "metadata": {
+      "agent_name": "Intervention Agent",
+      "timestamp": "2024-06-13T20:27:18Z"
+    }
+  },
+  "test_passed": true
+}

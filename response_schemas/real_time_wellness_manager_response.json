@@ -1,0 +1,138 @@
+{
+  "agent_name": "Real-Time Wellness Manager",
+  "agent_id": "698585db1caa4e686dd66da3",
+  "agent_purpose": "wellness_coordination",
+  "description": "Coordinates real-time user interactions by routing to sub-agents and synthesizing their insights into unified compassionate guidance",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "interaction_type": "string",
+      "unified_message": "string",
+      "intervention_summary": {
+        "needed": "boolean",
+        "type": "string",
+        "key_points": [
+          "string"
+        ]
+      },
+      "mood_support_summary": {
+        "provided": "boolean",
+        "key_technique": "string",
+        "emotional_insight": "string"
+      },
+      "recommended_actions": [
+        {
+          "action": "string",
+          "priority": "string",
+          "reason": "string"
+        }
+      ],
+      "encouragement": "string"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string",
+      "sub_agents_consulted": [
+        "string"
+      ]
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "interaction_type": "log_expense",
+      "unified_message": "You've just logged a $150 shopping expense, which brings you to 75% of your $200 monthly budget. That's powerful awareness\u2014tracking your spending is a real act of self-care, especially when you're feeling stressed about work. Let's gently notice that work stress might have influenced your shopping choice, and that's okay\u2014it's a very human response. Would you like to try the 5-4-3-2-1 Grounding exercise together to help you feel a bit more centered? Remember, we're in this together: no judgment, just mindful progress.",
+      "intervention_summary": {
+        "needed": true,
+        "type": "notification",
+        "key_points": [
+          "75% of shopping budget used",
+          "You're right on top of your spending with this log",
+          "Consider reviewing upcoming planned purchases"
+        ]
+      },
+      "mood_support_summary": {
+        "provided": true,
+        "key_technique": "5-4-3-2-1 Grounding",
+        "emotional_insight": "Stressed about work, which may be influencing spending choices. It's valid to seek comfort in difficult moments."
+      },
+      "recommended_actions": [
+        {
+          "action": "Try a quick 5-4-3-2-1 Grounding exercise (3 minutes)",
+          "priority": "high",
+          "reason": "This helps you pause, breathe, and regain a sense of calm and control."
+        },
+        {
+          "action": "Review your shopping wishlist and upcoming planned expenses",
+          "priority": "medium",
+          "reason": "Proactive review helps you stay aligned with your goals while giving yourself grace."
+        },
+        {
+          "action": "Reflect for a moment on whether work stress was part of your decision to spend today",
+          "priority": "medium",
+          "reason": "Honest reflection builds self-awareness and self-kindness for future choices."
+        }
+      ],
+      "encouragement": "You\u2019re showing wonderful awareness, and every check-in like this strengthens both your financial and emotional wellbeing. Let\u2019s keep moving forward together, one mindful step at a time."
+    },
+    "metadata": {
+      "agent_name": "Real-Time Wellness Manager",
+      "timestamp": "2024-06-12T20:00:00Z",
+      "sub_agents_consulted": [
+        "Intervention Agent",
+        "Mood Check Agent"
+      ]
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T06:13:33.233874",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "interaction_type": "log_expense",
+      "unified_message": "You've just logged a $150 shopping expense, which brings you to 75% of your $200 monthly budget. That's powerful awareness\u2014tracking your spending is a real act of self-care, especially when you're feeling stressed about work. Let's gently notice that work stress might have influenced your shopping choice, and that's okay\u2014it's a very human response. Would you like to try the 5-4-3-2-1 Grounding exercise together to help you feel a bit more centered? Remember, we're in this together: no judgment, just mindful progress.",
+      "intervention_summary": {
+        "needed": true,
+        "type": "notification",
+        "key_points": [
+          "75% of shopping budget used",
+          "You're right on top of your spending with this log",
+          "Consider reviewing upcoming planned purchases"
+        ]
+      },
+      "mood_support_summary": {
+        "provided": true,
+        "key_technique": "5-4-3-2-1 Grounding",
+        "emotional_insight": "Stressed about work, which may be influencing spending choices. It's valid to seek comfort in difficult moments."
+      },
+      "recommended_actions": [
+        {
+          "action": "Try a quick 5-4-3-2-1 Grounding exercise (3 minutes)",
+          "priority": "high",
+          "reason": "This helps you pause, breathe, and regain a sense of calm and control."
+        },
+        {
+          "action": "Review your shopping wishlist and upcoming planned expenses",
+          "priority": "medium",
+          "reason": "Proactive review helps you stay aligned with your goals while giving yourself grace."
+        },
+        {
+          "action": "Reflect for a moment on whether work stress was part of your decision to spend today",
+          "priority": "medium",
+          "reason": "Honest reflection builds self-awareness and self-kindness for future choices."
+        }
+      ],
+      "encouragement": "You\u2019re showing wonderful awareness, and every check-in like this strengthens both your financial and emotional wellbeing. Let\u2019s keep moving forward together, one mindful step at a time."
+    },
+    "metadata": {
+      "agent_name": "Real-Time Wellness Manager",
+      "timestamp": "2024-06-12T20:00:00Z",
+      "sub_agents_consulted": [
+        "Intervention Agent",
+        "Mood Check Agent"
+      ]
+    }
+  },
+  "test_passed": true
+}

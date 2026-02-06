@@ -1,0 +1,33 @@
+{
+  "agent_name": "Intervention Agent",
+  "agent_id": "6985858bab4bf65a66ad076d",
+  "test_message": "User spent $150 out of $200 shopping budget. Check if intervention needed.",
+  "expected_purpose": "sub-agent",
+  "timestamp": "2026-02-06T06:13:43.330133",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "intervention_type": "notification",
+      "message": "Great job keeping track of your spending! You\u2019ve used $150 out of your $200 shopping budget, which puts you at 75%. Let\u2019s celebrate your mindful awareness, and together, we can keep an eye on your remaining budget. If you need ideas for no-cost or low-cost rewards, I\u2019m here to help!",
+      "action_recommended": "Pause and review your shopping list before any new purchases.",
+      "timer_duration_minutes": null,
+      "budget_status": {
+        "category": "shopping",
+        "spent": 150,
+        "limit": 200,
+        "percentage": 75
+      },
+      "alternative_suggestions": [
+        "Take a break and review your upcoming needs before buying more.",
+        "Consider window shopping or online browsing without purchasing to satisfy the urge."
+      ]
+    },
+    "metadata": {
+      "agent_name": "Intervention Agent",
+      "timestamp": "2024-06-13T20:27:18Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"intervention_type\": \"notification\",\n    \"message\": \"Great job keeping track of your spending! You\u2019ve used $150 out of your $200 shopping budget, which puts you at 75%. Let\u2019s celebrate your mindful awareness, and together, we can keep an eye on your remaining budget. If you need ideas for no-cost or low-cost rewards, I\u2019m here to help!\",\n    \"action_recommended\": \"Pause and review your shopping list before any new purchases.\",\n    \"timer_duration_minutes\": null,\n    \"budget_status\": {\n      \"category\": \"shopping\",\n      \"spent\": 150,\n      \"limit\": 200,\n      \"percentage\": 75\n    },\n    \"alternative_suggestions\": [\n      \"Take a break and review your upcoming needs before buying more.\",\n      \"Consider window shopping or online browsing without purchasing to satisfy the urge.\"\n    ]\n  },\n  \"metadata\": {\n    \"agent_name\": \"Intervention Agent\",\n    \"timestamp\": \"2024-06-13T20:27:18Z\"\n  }\n}"
+}

@@ -1,0 +1,53 @@
+{
+  "workflow_created": true,
+  "agents": {
+    "realtime_wellness_manager": {
+      "agent_id": "698585db1caa4e686dd66da3",
+      "name": "Real-Time Wellness Manager",
+      "type": "manager",
+      "status": "active",
+      "managed_agents": [
+        "6985858bab4bf65a66ad076d",
+        "698585a8f5dba64760ed7f08"
+      ]
+    },
+    "intervention_agent": {
+      "agent_id": "6985858bab4bf65a66ad076d",
+      "name": "Intervention Agent",
+      "type": "sub_agent",
+      "status": "active",
+      "has_knowledge_base": true,
+      "rag_id": "6985857960cd1fd2d988d8f4"
+    },
+    "mood_check_agent": {
+      "agent_id": "698585a8f5dba64760ed7f08",
+      "name": "Mood Check Agent",
+      "type": "sub_agent",
+      "status": "active",
+      "has_knowledge_base": true,
+      "rag_id": "6985857960cd1fd2d988d8f4"
+    },
+    "behavioral_insights_agent": {
+      "agent_id": "69858608e17e33c11eed199a",
+      "name": "Behavioral Insights Agent",
+      "type": "independent",
+      "status": "active",
+      "has_knowledge_base": true,
+      "rag_id": "6985857960cd1fd2d988d8f4"
+    }
+  },
+  "knowledge_base": {
+    "rag_id": "6985857960cd1fd2d988d8f4",
+    "rag_name": "mindfulmoneywellnesskbc7bl",
+    "collection_name": "mindfulmoneywellnesskbc7bl",
+    "description": "Behavioral economics, financial literacy, habit formation, emotional wellness, and ethics"
+  },
+  "response_schemas": [
+    "intervention_agent_response.json",
+    "mood_check_agent_response.json",
+    "real_time_wellness_manager_response.json",
+    "behavioral_insights_agent_response.json"
+  ],
+  "created_at": "2026-02-06T00:00:00Z",
+  "total_agents": 4
+}

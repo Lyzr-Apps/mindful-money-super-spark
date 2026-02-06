@@ -1,0 +1,80 @@
+{
+  "agent_name": "Mood Check Agent",
+  "agent_id": "698585a8f5dba64760ed7f08",
+  "agent_purpose": "emotional_wellness_checkin",
+  "description": "Conducts compassionate mood-based check-ins, provides reflection prompts, emotional support, and mindfulness techniques for financial wellness",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "mood_assessment": "string",
+      "check_in_message": "string",
+      "reflection_prompts": [
+        "string"
+      ],
+      "emotional_support": "string",
+      "mindfulness_technique": {
+        "name": "string",
+        "description": "string",
+        "duration_minutes": "number"
+      },
+      "spending_emotion_connection": "string",
+      "follow_up_suggestion": "string"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "mood_assessment": "stressed",
+      "check_in_message": "Thank you for sharing how you're feeling. It sounds like work stress is weighing on you right now. Let's take a gentle moment to check in with yourself as you navigate this purchase.",
+      "reflection_prompts": [
+        "What emotions came up for you just before deciding to make this purchase?",
+        "In what ways might this purchase be soothing or comforting in the midst of your work stress?",
+        "Is there something your mind or body is asking for right now, aside from the purchase?"
+      ],
+      "emotional_support": "It's completely valid to feel stressed, especially with work demands. Many people reach for comfort during these moments\u2014know that you're not alone in this experience.",
+      "mindfulness_technique": {
+        "name": "Box Breathing",
+        "description": "Take a slow breath in for 4 counts, hold it for 4, exhale for 4, then pause for 4. Repeat this for a few cycles to help calm your nervous system and create a moment of clarity.",
+        "duration_minutes": 2
+      },
+      "spending_emotion_connection": "It's common to turn to spending as a way to manage or ease stressful feelings. Recognizing this link can help you pause and consider what you truly need in this moment.",
+      "follow_up_suggestion": "If you're open to it, try a few cycles of Box Breathing before going forward\u2014just to create a mindful pause. Then, check in with yourself again to see how you feel."
+    },
+    "metadata": {
+      "agent_name": "Mood Check Agent",
+      "timestamp": "2024-06-14T19:18:00Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T06:13:54.239384",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "mood_assessment": "stressed",
+      "check_in_message": "Thank you for sharing how you're feeling. It sounds like work stress is weighing on you right now. Let's take a gentle moment to check in with yourself as you navigate this purchase.",
+      "reflection_prompts": [
+        "What emotions came up for you just before deciding to make this purchase?",
+        "In what ways might this purchase be soothing or comforting in the midst of your work stress?",
+        "Is there something your mind or body is asking for right now, aside from the purchase?"
+      ],
+      "emotional_support": "It's completely valid to feel stressed, especially with work demands. Many people reach for comfort during these moments\u2014know that you're not alone in this experience.",
+      "mindfulness_technique": {
+        "name": "Box Breathing",
+        "description": "Take a slow breath in for 4 counts, hold it for 4, exhale for 4, then pause for 4. Repeat this for a few cycles to help calm your nervous system and create a moment of clarity.",
+        "duration_minutes": 2
+      },
+      "spending_emotion_connection": "It's common to turn to spending as a way to manage or ease stressful feelings. Recognizing this link can help you pause and consider what you truly need in this moment.",
+      "follow_up_suggestion": "If you're open to it, try a few cycles of Box Breathing before going forward\u2014just to create a mindful pause. Then, check in with yourself again to see how you feel."
+    },
+    "metadata": {
+      "agent_name": "Mood Check Agent",
+      "timestamp": "2024-06-14T19:18:00Z"
+    }
+  },
+  "test_passed": true
+}

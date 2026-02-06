@@ -1,0 +1,109 @@
+{
+  "nodes": [
+    {
+      "id": "input_node",
+      "type": "Input",
+      "label": "User Interaction",
+      "nodeCategory": "input",
+      "position": {
+        "x": 100,
+        "y": 200
+      }
+    },
+    {
+      "id": "realtime_wellness_manager",
+      "type": "Agent",
+      "label": "Real-Time Wellness Manager",
+      "nodeCategory": "agent",
+      "position": {
+        "x": 400,
+        "y": 200
+      },
+      "data": {
+        "agent_id": "698585db1caa4e686dd66da3",
+        "agent_type": "manager",
+        "managed_agents": [
+          "6985858bab4bf65a66ad076d",
+          "698585a8f5dba64760ed7f08"
+        ]
+      }
+    },
+    {
+      "id": "intervention_agent",
+      "type": "Agent",
+      "label": "Intervention Agent",
+      "nodeCategory": "agent",
+      "position": {
+        "x": 300,
+        "y": 400
+      },
+      "data": {
+        "agent_id": "6985858bab4bf65a66ad076d",
+        "agent_type": "sub_agent",
+        "has_knowledge_base": true
+      }
+    },
+    {
+      "id": "mood_check_agent",
+      "type": "Agent",
+      "label": "Mood Check Agent",
+      "nodeCategory": "agent",
+      "position": {
+        "x": 500,
+        "y": 400
+      },
+      "data": {
+        "agent_id": "698585a8f5dba64760ed7f08",
+        "agent_type": "sub_agent",
+        "has_knowledge_base": true
+      }
+    },
+    {
+      "id": "behavioral_insights_agent",
+      "type": "Agent",
+      "label": "Behavioral Insights Agent",
+      "nodeCategory": "agent",
+      "position": {
+        "x": 800,
+        "y": 200
+      },
+      "data": {
+        "agent_id": "69858608e17e33c11eed199a",
+        "agent_type": "independent",
+        "has_knowledge_base": true
+      }
+    },
+    {
+      "id": "output_node",
+      "type": "Output",
+      "label": "Compassionate Guidance",
+      "nodeCategory": "end",
+      "position": {
+        "x": 400,
+        "y": 600
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "input_node",
+      "target": "realtime_wellness_manager"
+    },
+    {
+      "source": "realtime_wellness_manager",
+      "target": "intervention_agent"
+    },
+    {
+      "source": "realtime_wellness_manager",
+      "target": "mood_check_agent"
+    },
+    {
+      "source": "intervention_agent",
+      "target": "output_node"
+    },
+    {
+      "source": "mood_check_agent",
+      "target": "output_node"
+    }
+  ]
+}
